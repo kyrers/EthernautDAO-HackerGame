@@ -29,7 +29,7 @@ async function main() {
     let deployTx = await ethers.getDefaultProvider("goerli").getTransaction(deployTxHash);
     let txBlock = await ethers.getDefaultProvider("goerli").getBlock(deployTx.blockHash);
 
-    //Decode it
+    //Decode the contractCreationBytecode
     const interface = new ethers.utils.Interface(abi);
     const decodedParams = interface._decodeParams(["string"], contractCreationBytecode);
     console.log(`### rndString: ${decodedParams[0]} ###`);
