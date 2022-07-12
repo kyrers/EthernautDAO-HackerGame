@@ -1,9 +1,6 @@
 require("@nomiclabs/hardhat-ethers");
 require('dotenv').config();
 
-console.log(process.env.GOERLI_ACCOUNT_PK);
-console.log(process.env.INFURA_ID);
-
 module.exports = {
   solidity: "0.8.15",
   networks: {
