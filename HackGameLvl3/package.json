@@ -2,6 +2,7 @@
   "name": "hardhat-project",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.1.0",
+    "@openzeppelin/hardhat-upgrades": "^1.19.0",
     "dotenv": "^16.0.1",
     "hardhat": "^2.10.1"
   }

