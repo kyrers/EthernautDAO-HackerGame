@@ -1,0 +1,9 @@
+{
+  "name": "hardhat-project",
+  "devDependencies": {
+    "hardhat": "^2.10.1"
+  },
+  "dependencies": {
+    "dot-env": "^0.0.1"
+  }
+}
