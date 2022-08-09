@@ -6,5 +6,7 @@ EthernautDAO Hacker Game Solutions - each with its own branch.
 ## [Level 3](../../tree/Level-3)
 ## [Level 4](../../tree/Level-4)
 ## [Level 5](../../tree/Level-5)
+## [Level 6](../../tree/Level-6)
+
 
 ###### kyrers
