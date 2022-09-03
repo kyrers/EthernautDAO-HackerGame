@@ -2,14 +2,14 @@
 
 The goal of this challenge is to drain the `EtherWallet` contract.
 
-To me, this was the hardest challenge so far. I actually needed a tip from berskay, a member of the EthernautDAO. I'll explain how I reached the solution below.
+To me, this was the hardest challenge so far. I actually needed a tip from beskay, a member of the EthernautDAO. I'll explain how I reached the solution below.
 
 Looking at the `EtherWallet` contract, it was obvious that the `withdraw(...)` function needed to be called.
 
 It was also obvious that using the signature that the owner used after deploying the contract would not work, because of the line `require(!usedSignatures[signature], "Signature already used!");`.
 
 The next verification made by the `withdraw()` function is to verifiy that the signature provided resolves to the owner address. I looked through the `ECDSA` library code, but I couldn't find an exploit.
-This is where the tip from berskay came in handy - he told me to compare it to the [OpenZeppelin implementation](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/ECDSA.sol).
+This is where the tip from beskay came in handy - he told me to compare it to the [OpenZeppelin implementation](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/ECDSA.sol).
 
 First thing I noticed is that the `ECDSA` library being used in this challenge did not implement all the functions present in the OpenZeppelin version, but that did not seem too critical.
 
