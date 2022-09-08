@@ -2,19 +2,11 @@
 pragma solidity ^0.8.15;
 
 /**
-* @dev The contract that receives the funds
+* @dev The contract that receives the funds and sends them to whoever calls withdraw
 * @author kyrers
 */
 contract Attacker {
-    address public owner;
-    
-    constructor() {
-        owner = msg.sender;
+    function withdraw() external {
+        payable(msg.sender).transfer(address(this).balance);
     }
-
-    function receiveFunds() external payable returns (bool) {
-        (bool success, ) = payable(owner).call{value: msg.value}("");
-        return success;
-    }
-    
 }
