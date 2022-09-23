@@ -1,14 +1,16 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-    const [owner, attacker] = await ethers.getSigners();
+    const [owner, attacker, lpStaker] = await ethers.getSigners();
     console.log("## OWNER ACCOUNT: ", owner.address);
     console.log("## ATTACK ACCOUNT: ", attacker.address);
-    
+    console.log("## LPSTAKER ACCOUNT: ", lpStaker.address);
+
     console.log("** DEPLOY CONTRACTS **");
+
     //Deploy RewardToken
     const rewardFactory = await ethers.getContractFactory("RewardToken");
-    const rewardContract = await rewardFactory.deploy("RewardToken", "RT", owner.address);
+    const rewardContract = await rewardFactory.deploy("RewardToken", "RT", lpStaker.address);
     await rewardContract.deployed();
     console.log("   ## REWARD TOKEN DEPLOYED TO: ", rewardContract.address);
 
@@ -26,31 +28,28 @@ async function main() {
 
     //-----------------------------------------------------------------------
 
-    console.log("** SETUP REWARD TOKEN CONTRACT **");
-    //Add Reward to RewardToken
-    await rewardContract.addReward(mockERC20Contract.address, owner.address, 7257600);
-    console.log("   ## ADD REWARD TOKEN TO REWARD CONTRACT");
+    console.log("** SETUP CONTRACTS **");
 
     //Mint RewardTokens to owner
     await rewardContract.mint(owner.address, ethers.utils.parseEther("10000000000"));
     console.log("   ## MINT REWARD TOKENS TO OWNER");
 
-    //Approve Staking contrac to use all RewardTokens
+    //Approve Staking contract to use all RewardTokens
     await rewardContract.approve(stakingContract.address, ethers.constants.MaxUint256);
     console.log("   ## APPROVE STAKING CONTRACT TO USE REWARD TOKENS");
-    //-----------------------------------------------------------------------
 
-    console.log("** SETUP STAKING CONTRACT **");
-
-    //Add Reward to Staking
+    //Add RewardToken to Staking as the reward token
     await stakingContract.addReward(rewardContract.address, owner.address, 7257600);
-    console.log("   ## ADD REWARD TOKEN TO REWARD CONTRACT");
+    console.log("   ## ADD REWARD TOKEN TO STAKING CONTRACT");
 
     //Staking Notify Reward Amount
     await stakingContract.notifyRewardAmount(rewardContract.address, ethers.utils.parseEther("1000000"));
     console.log("   ## NOTIFY REWARD AMOUNT");
-    //-----------------------------------------------------------------------
 
+    // Add MockERC20 to Reward as the reward token
+    await rewardContract.addReward(mockERC20Contract.address, owner.address, 7257600);
+    console.log("   ## ADD REWARD TOKEN TO REWARD CONTRACT");
+    //-----------------------------------------------------------------------
 }
 
 main()
