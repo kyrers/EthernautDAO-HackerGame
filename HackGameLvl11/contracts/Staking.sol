@@ -136,8 +136,7 @@ contract Staking is ReentrancyGuard, Ownable, Pausable {
         require(rewardData[_rewardsToken].rewardsDistributor == msg.sender, "DISTRIBUTOR NOT SENDER");
         // handle the transfer of reward tokens via `transferFrom` to reduce the number
         // of transactions required and ensure correctness of the reward amount
-        bool success = IERC20(_rewardsToken).transferFrom(msg.sender, address(this), reward);
-        require(success, "Transfer failed");
+        IERC20(_rewardsToken).transferFrom(msg.sender, address(this), reward);
 
         if (block.timestamp >= rewardData[_rewardsToken].periodFinish) {
             rewardData[_rewardsToken].rewardRate = reward.div(rewardData[_rewardsToken].rewardsDuration);
