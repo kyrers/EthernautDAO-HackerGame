@@ -1,5 +1,6 @@
 const { parseEther } = require("ethers/lib/utils");
-const { ethers } = require("hardhat");
+const { ethers, network } = require("hardhat");
+require("dotenv").config();
 
 async function main() {
     //The contract abi
@@ -15,7 +16,7 @@ async function main() {
     ];
 
     //The contract address
-    const contractAddress = "0x620E0c88E0f8F36bCC06736138bDEd99B6401192";
+    const contractAddress = "0x7FB2058147D0F3c6b499AF319E908334D591B777";
 
     const [signer] = await ethers.getSigners();
     console.log("SIGNER: ", signer.address);
@@ -23,11 +24,13 @@ async function main() {
     //Get the contract and connect using your account
     let contract = new ethers.Contract(contractAddress, abi, signer);
 
+    let provider = new ethers.providers.AlchemyProvider("optimism-goerli", process.env.ALCHEMY_KEY)
+
     //Get the deployment info
-    let deployTxHash = "0x027f7b59ae7602d23e99bc74d96a6bfc2a6760fb22edfa76a1b4eb8b553e7215";
+    let deployTxHash = "0xd4d70fed8382e29a82adeb1b382567900f51330a155f1e7b2c665dc66878c1a5";
     let contractCreationBytecode = "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000042307831646363346465386465633735643761616238356235363762366363643431616433313234353162393438613734313366306131343266643430643439333437000000000000000000000000000000000000000000000000000000000000";
-    let deployTx = await ethers.getDefaultProvider("goerli").getTransaction(deployTxHash);
-    let txBlock = await ethers.getDefaultProvider("goerli").getBlock(deployTx.blockHash);
+    let deployTx = await provider.getTransaction(deployTxHash);
+    let txBlock = await provider.getBlock(deployTx.blockHash);
 
     //Decode the contractCreationBytecode
     const interface = new ethers.utils.Interface(abi);
