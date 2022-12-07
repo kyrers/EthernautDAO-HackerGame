@@ -23,5 +23,9 @@ module.exports = {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_ID}`,
       accounts: [`${process.env.GOERLI_ACCOUNT_PK}`, `${process.env.GOERLI_SECOND_ACCOUNT_PK}`]
     },
+    "optimism-goerli": {
+      url: `https://opt-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
+      accounts: [`${process.env.OPTIMISTIC_GOERLI_ACCOUNT_PK}`,]
+    }
   }
 }
